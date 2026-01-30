@@ -1,4 +1,5 @@
 // FILE: Scripts/Characters/BaseCharacter.cs
+// Updated: LookAt and Move are now virtual
 using UnityEngine;
 using Game.Core;
 
@@ -37,12 +38,12 @@ namespace Game.Characters
             Debug.Log($"{gameObject.name} Depossessed! Switching to AI.");
         }
 
-        public void Move(Vector3 direction)
+        public virtual void Move(Vector3 direction)
         {
             _motor.MoveByInput(direction);
         }
 
-        public void LookAt(Vector3 targetPoint)
+        public virtual void LookAt(Vector3 targetPoint)
         {
             _motor.RotateTowards(targetPoint);
         }
