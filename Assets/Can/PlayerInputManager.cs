@@ -46,20 +46,16 @@ namespace Can
             }
         }
 
+        // HandleLookInput içindeki değişikliği yap:
         private void HandleLookInput()
         {
             if (PossessionManager.Instance.CurrentPossessed == null) return;
 
-            // Raycast ile mouse'un dünyadaki yerini bul
-            Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f, groundLayer))
-            {
-                Vector3 lookPoint = hit.point;
-                lookPoint.y = 0; // Y eksenini kilitle (Top-down olduğu için)
+            // Mouse'un dünyadaki 2D koordinatını al
+            Vector3 mousePos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 lookPoint = new Vector2(mousePos.x, mousePos.y);
 
-                // Interface üzerindeki LookAt metodunu çağır
-                PossessionManager.Instance.CurrentPossessed.LookAt(lookPoint);
-            }
+            PossessionManager.Instance.CurrentPossessed.LookAt(lookPoint);
         }
 
         private void HandleActionInput()
@@ -84,21 +80,19 @@ namespace Can
             }
         }
 
+        // HandlePossessionInput (Sağ tık ile seçme) değişikliği:
         private void HandlePossessionInput()
         {
-            // ŞİMDİLİK TEST İÇİN: Sağ tık ile mouse'un altındaki objeyi possess et.
-            // İLERİDE: Burası SoulProjectile fırlatacak.
-            if (Input.GetMouseButtonDown(1)) // Sağ Tık
+            if (Input.GetMouseButtonDown(1))
             {
-                Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out RaycastHit hit))
+                Vector2 mousePos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                // 2D Raycast kullanıyoruz
+                RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+
+                if (hit.collider != null)
                 {
-                    // Tıklanan objede IPossessable var mı?
                     IPossessable target = hit.collider.GetComponent<IPossessable>();
-                    if (target != null)
-                    {
-                        PossessionManager.Instance.Possess(target);
-                    }
+                    if (target != null) PossessionManager.Instance.Possess(target);
                 }
             }
         }

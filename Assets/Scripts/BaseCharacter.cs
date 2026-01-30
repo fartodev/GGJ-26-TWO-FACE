@@ -10,6 +10,8 @@ namespace Game.Characters
     {
         [SerializeField] private UnitMotor _motor;
 
+        [SerializeField] protected string characterName;
+
         // Debugging / State tracking
         [SerializeField] private bool _isPossessed = false;
 
@@ -38,12 +40,12 @@ namespace Game.Characters
             Debug.Log($"{gameObject.name} Depossessed! Switching to AI.");
         }
 
-        public virtual void Move(Vector3 direction)
+        public virtual void Move(Vector2 direction)
         {
             _motor.MoveByInput(direction);
         }
 
-        public virtual void LookAt(Vector3 targetPoint)
+        public virtual void LookAt(Vector2 targetPoint)
         {
             _motor.RotateTowards(targetPoint);
         }

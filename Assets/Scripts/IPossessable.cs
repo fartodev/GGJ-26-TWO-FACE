@@ -10,8 +10,8 @@ namespace Game.Core
         void OnDepossess();
 
         // Locomotion & Physics
-        void Move(Vector3 direction);
-        void LookAt(Vector3 targetPoint);
+        void Move(Vector2 direction);
+        void LookAt(Vector2 targetPoint);
 
         // Gameplay Actions
         void Action(); // Context sensitive (Shoot or Interact)

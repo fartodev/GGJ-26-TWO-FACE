@@ -1,73 +1,44 @@
-// FILE: Scripts/Characters/UnitMotor.cs
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Game.Characters
 {
-    [RequireComponent(typeof(Rigidbody))]
-    [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(Rigidbody2D))] // 2D Fizik
     public class UnitMotor : MonoBehaviour
     {
-        [Header("Settings")]
         [SerializeField] private float _moveSpeed = 5f;
-        [SerializeField] private float _rotationSpeed = 10f;
+        [SerializeField] private float _rotationSpeed = 720f; // 2D'de derece cinsinden
 
-        private Rigidbody _rb;
-        private NavMeshAgent _agent;
+        private Rigidbody2D _rb;
         private bool _isPlayerControlled = false;
 
         private void Awake()
         {
-            _rb = GetComponent<Rigidbody>();
-            _agent = GetComponent<NavMeshAgent>();
-
-            // Default setup
-            _rb.isKinematic = true;
-            _agent.enabled = true;
+            _rb = GetComponent<Rigidbody2D>();
+            _rb.gravityScale = 0f; // Top-down olduðu için yerçekimini kapat
         }
 
         public void SetPlayerControl(bool isPlayer)
         {
             _isPlayerControlled = isPlayer;
-
-            if (_isPlayerControlled)
-            {
-                _agent.enabled = false;
-                _rb.isKinematic = false;
-            }
-            else
-            {
-                _rb.isKinematic = true;
-                _agent.enabled = true;
-            }
+            // 2D'de NavMeshAgent (varsayýlan) yerine basit hareket kullanacaðýz 
+            // veya 2D NavMesh eklentisi kullanmalýsýn.
         }
 
-        public void MoveByInput(Vector3 direction)
+        public void MoveByInput(Vector2 direction) // Vector3 -> Vector2
         {
             if (!_isPlayerControlled) return;
-
-            // Physics-based movement for Player
-            Vector3 velocity = direction.normalized * _moveSpeed;
-            velocity.y = _rb.linearVelocity.y; // Keep gravity
-            _rb.linearVelocity = velocity;
+            _rb.linearVelocity = direction.normalized * _moveSpeed; // Unity 2023+ (Eski sürümse .velocity)
         }
 
-        public void RotateTowards(Vector3 point)
+        public void RotateTowards(Vector2 targetPoint)
         {
-            Vector3 direction = point - transform.position;
-            direction.y = 0; // Keep rotation flat
+            // 2D Bakýþ Mantýðý: Karakterin baktýðý yönü (Right veya Up) hedefe çevir
+            Vector2 lookDir = targetPoint - (Vector2)transform.position;
+            float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
 
-            if (direction != Vector3.zero)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
-            }
-        }
-
-        public void MoveByNavMesh(Vector3 target)
-        {
-            if (_isPlayerControlled || !_agent.isActiveAndEnabled) return;
-            _agent.SetDestination(target);
+            // Karakterin sprite'ý saða bakýyorsa 0, yukarý bakýyorsa -90 ofset gerekebilir
+            Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
         }
     }
 }
