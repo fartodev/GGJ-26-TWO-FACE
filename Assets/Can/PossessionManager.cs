@@ -61,28 +61,49 @@ namespace Can
         /// </summary>
         public void Depossess()
         {
-            // Şu anki bedenden çık
-            if (CurrentPossessed != null)
+            // 1. Ayrılacağımız bedeni geçici bir değişkende tutalım
+            IPossessable oldHost = CurrentPossessed;
+
+            // 2. Eğer şu anki karakter zaten Ruh ise işlem yapma (Ruh kendini öldürmesin)
+            // 'playerSoul' değişkeninin sınıfın başında tanımlı olduğunu varsayıyorum
+            if (oldHost == playerSoul) return;
+
+            // 3. Bedenden çıkış işlemlerini yap (Resetleme vs.)
+            if (oldHost != null)
             {
-                CurrentPossessed.OnDepossess();
-                Debug.Log($"<color=red>DEPOSSESSED:</color> {(CurrentPossessed as MonoBehaviour)?.name}");
+                oldHost.OnDepossess();
             }
 
-            // Ruhu, son bulunduğumuz bedenin konumuna getir
+            // 4. Ruhu, eski bedenin konumuna getir ve aktif et
             if (currentPossessedObject != null)
             {
                 playerSoul.transform.position = currentPossessedObject.transform.position;
             }
 
-            // Ruhu aktif et ve kontrolü ona ver
             playerSoul.gameObject.SetActive(true);
 
-            // Doğrudan Possess metodunu çağırmıyoruz (döngüye girmesin diye), manuel set ediyoruz
+            // 5. Yönetimi Ruha geçir
             CurrentPossessed = playerSoul;
             currentPossessedObject = playerSoul.gameObject;
             playerSoul.OnPossess();
 
-            Debug.Log("Ruh formuna dönüldü.");
+            Debug.Log("Ruh serbest kaldı, eski beden yok ediliyor...");
+
+            // 6. KRİTİK ADIM: Eski bedeni öldür! ☠️
+            // oldHost bir MonoBehaviour olduğu için GetComponent diyebiliriz
+            if (oldHost is MonoBehaviour hostMono)
+            {
+                // Eğer o bedende Can Sistemi varsa öldür
+                if (hostMono.TryGetComponent(out Mustafa.HealthSystem health))
+                {
+                    health.Kill();
+                }
+                else
+                {
+                    // Can sistemi yoksa direkt yok et (Fallback)
+                    Destroy(hostMono.gameObject);
+                }
+            }
         }
     }
 }
