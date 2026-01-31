@@ -22,6 +22,9 @@ namespace Game.Core
         [Tooltip("Bir bedene girince eklenen bonus oksijen")]
         [SerializeField] private float oxygenGainOnPossess = 30f;
 
+        [Tooltip("Bedenden çıkınca geri kazanılan oksijen miktarı")]
+        [SerializeField] private float oxygenOnDepossess = 20f;
+
         [Header("UI Reference")]
         [SerializeField] private Image oxygenBarFill;
 
@@ -68,13 +71,13 @@ namespace Game.Core
             UpdateUI();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             // Moda göre drain rate belirle
             float drainRate = _isSoulMode ? soulFormDrainRate : possessedDrainRate;
 
             // Oksijeni azalt
-            DrainOxygen(drainRate * Time.deltaTime);
+            DrainOxygen(drainRate * Time.fixedDeltaTime);
         }
 
         /// <summary>
@@ -108,10 +111,10 @@ namespace Game.Core
 
             UpdateUI();
 
-            // Oksijen bittiyse oyunu bitir
+            // Oksijen bittiyse durum kontrolü
             if (currentOxygen <= 0f)
             {
-                GameOver();
+                HandleOxygenDepletion();
             }
         }
 
@@ -138,7 +141,30 @@ namespace Game.Core
         }
 
         /// <summary>
-        /// Oyun sonu - Oksijen bittiğinde
+        /// Oksijen bittiğinde durum kontrolü yapar
+        /// </summary>
+        private void HandleOxygenDepletion()
+        {
+            // Eğer bir bedendeyken oksijen bittiyse, depossess yap
+            if (!_isSoulMode && Can.PossessionManager.Instance != null)
+            {
+                Debug.LogWarning("<color=yellow>[OxygenSystem]</color> Bedendeyken oksijen bitti! Ruh formuna dönülüyor...");
+
+                // Biraz oksijen ekle
+                AddOxygen(oxygenOnDepossess);
+
+                // Depossess yap
+                Can.PossessionManager.Instance.Depossess();
+            }
+            else
+            {
+                // Ruh formundayken oksijen bittiyse oyun biter
+                GameOver();
+            }
+        }
+
+        /// <summary>
+        /// Oyun sonu - Ruh formundayken oksijen bittiğinde
         /// </summary>
         private void GameOver()
         {

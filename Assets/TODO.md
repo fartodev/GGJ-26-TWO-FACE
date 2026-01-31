@@ -1,7 +1,5 @@
-## Deposses sonrası npc delete.
-## oksijen.
+## oksijen (bugfix)
 ## şüphe sistemi. (npclere cone vision ve şüphe colliderı)
-## Kapı sprite değiştirme/collider kapatma.
 ## Ana Konak.
 ## Mermi vectorü.
 ## Spritelar alınıp animasyon bağlancak.
