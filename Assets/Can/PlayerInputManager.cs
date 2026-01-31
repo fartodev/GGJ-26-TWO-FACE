@@ -87,16 +87,34 @@ namespace Can
         // HandlePossessionInput (Sağ tık ile seçme) değişikliği:
         private void HandlePossessionInput()
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1)) // Sağ Tık
             {
                 Vector2 mousePos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
-                // 2D Raycast kullanıyoruz
+
+                // Raycast atıyoruz
                 RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
 
+                // SENARYO 1: Bir şeye tıkladık mı?
                 if (hit.collider != null)
                 {
                     IPossessable target = hit.collider.GetComponent<IPossessable>();
-                    if (target != null) PossessionManager.Instance.Possess(target);
+
+                    // Tıkladığımız şey ele geçirilebilir bir şeyse, ona geç
+                    if (target != null)
+                    {
+                        PossessionManager.Instance.Possess(target);
+                        return; // İşlem tamam, fonksiyondan çık
+                    }
+                }
+
+                // SENARYO 2: Boşluğa tıkladık veya geçersiz bir şeye tıkladık
+                // Eğer şu an zaten Ruh değilsek (yani bir bedendeysek), bedenden çık.
+                // (PossessionManager'da playerSoul tanımlı olmalı)
+                if (PossessionManager.Instance.CurrentPossessed != null)
+                {
+                    // Buraya "Ruh formunda değilsek" kontrolü eklemek daha güvenli olur
+                    // Ancak basitçe Depossess çağırmak da iş görür, Manager kontrol eder.
+                    PossessionManager.Instance.Depossess();
                 }
             }
         }

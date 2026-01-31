@@ -5,7 +5,7 @@ namespace Game.Characters
     [RequireComponent(typeof(Rigidbody2D))] // 2D Fizik
     public class UnitMotor : MonoBehaviour
     {
-        [SerializeField] private float _moveSpeed = 5f;
+        [SerializeField] public float _moveSpeed = 5f;
         //[SerializeField] private float _rotationSpeed = 720f; // 2D'de derece cinsinden
 
         private Rigidbody2D _rb;

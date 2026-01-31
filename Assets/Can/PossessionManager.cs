@@ -1,7 +1,6 @@
 using UnityEngine;
 using Game.Core;
-// Ortak scriptlere erişim için namespace gerekmiyorsa (global namespace) direkt kullanıyoruz.
-// Eğer ortak scriptler 'Core' gibi bir namespace'de ise 'using Core;' eklenmeli.
+using Mustafa; // SoulCharacter'i tanımak için
 
 namespace Can
 {
@@ -9,66 +8,81 @@ namespace Can
     {
         public static PossessionManager Instance { get; private set; }
 
-        [Header("Debug Info")]
-        [SerializeField] private GameObject currentPossessedObject; // Inspector'da görmek için
+        [Header("Soul Reference")]
+        [SerializeField] private SoulCharacter playerSoul; // Sahnedeki Ruh objesini buraya sürükle
 
-        // Şu an kontrol edilen varlık (Interface üzerinden tutuyoruz)
+        [Header("Debug Info")]
+        [SerializeField] private GameObject currentPossessedObject;
         public IPossessable CurrentPossessed { get; private set; }
 
         private void Awake()
         {
-            // Singleton Pattern
-            if (Instance == null)
+            if (Instance == null) Instance = this;
+            else Destroy(gameObject);
+        }
+
+        private void Start()
+        {
+            // Oyun başladığında otomatik olarak Ruh formuna geç
+            if (playerSoul != null)
             {
-                Instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
+                Possess(playerSoul);
             }
         }
 
-        /// <summary>
-        /// Hedef varlığın kontrolünü ele alır.
-        /// </summary>
-        /// <param name="target">Ele geçirilecek hedef</param>
         public void Possess(IPossessable target)
         {
             if (target == null) return;
 
-            // 1. Eğer zaten birini kontrol ediyorsak, onu bırak (Depossess)
+            // 1. Eğer şu an bir bedendeysek, ondan çıkış işlemlerini yap
             if (CurrentPossessed != null)
             {
                 CurrentPossessed.OnDepossess();
             }
 
-            // 2. Yeni hedefi ayarla
-            CurrentPossessed = target;
+            // 2. Eğer hedef Ruh değilse (yani bir düşmana giriyorsak), Ruhu gizle
+            if (target != playerSoul)
+            {
+                playerSoul.gameObject.SetActive(false);
+            }
 
-            // MonoBehaviour referansını da inspector için tutalım (Cast işlemi)
+            // 3. Yeni hedefi ayarla
+            CurrentPossessed = target;
             currentPossessedObject = (target as MonoBehaviour)?.gameObject;
 
-            // 3. Hedefe ele geçirildiğini bildir
+            // 4. Hedefe ele geçirildiğini bildir
             CurrentPossessed.OnPossess();
 
             Debug.Log($"<color=green>POSSESSED:</color> {currentPossessedObject.name}");
-
-            // TODO: CameraController'a yeni hedefi bildir (Daha sonra eklenecek)
         }
 
         /// <summary>
-        /// Mevcut bedeni terk et (Örn: Öldüğünde veya manuel çıkışta)
+        /// Bedenden çıkıp Ruh formuna döner.
         /// </summary>
         public void Depossess()
         {
+            // Şu anki bedenden çık
             if (CurrentPossessed != null)
             {
                 CurrentPossessed.OnDepossess();
                 Debug.Log($"<color=red>DEPOSSESSED:</color> {(CurrentPossessed as MonoBehaviour)?.name}");
-
-                CurrentPossessed = null;
-                currentPossessedObject = null;
             }
+
+            // Ruhu, son bulunduğumuz bedenin konumuna getir
+            if (currentPossessedObject != null)
+            {
+                playerSoul.transform.position = currentPossessedObject.transform.position;
+            }
+
+            // Ruhu aktif et ve kontrolü ona ver
+            playerSoul.gameObject.SetActive(true);
+
+            // Doğrudan Possess metodunu çağırmıyoruz (döngüye girmesin diye), manuel set ediyoruz
+            CurrentPossessed = playerSoul;
+            currentPossessedObject = playerSoul.gameObject;
+            playerSoul.OnPossess();
+
+            Debug.Log("Ruh formuna dönüldü.");
         }
     }
 }
