@@ -1,28 +1,53 @@
 using UnityEngine;
+using TestTunax;
 
 namespace Eren
 {
-    // Guard: Daha yavaþ ateþ eden, düþük menzilli birim (Pistol)
     public class Guard : CombatCharacter
     {
+        [Header("AI References")]
+        [Tooltip("GuardSystem scripti Child objede ise buraya sÃ¼rÃ¼kleyin.")]
+        [SerializeField] private GuardSystem _guardSystem;
 
         protected override void Awake()
         {
-            // Önce veriyi set ediyoruz, sonra base logic'i çalýþtýrýyoruz
             characterName = "Security Guard";
 
-            // Eðer BaseCharacter veya CombatCharacter içinde Awake mantýðý varsa onu çaðýrýyoruz
+            // EÄŸer Inspector'dan atamayÄ± unuttuysan, kod otomatik bulmaya Ã§alÄ±ÅŸsÄ±n:
+            if (_guardSystem == null)
+            {
+                // Ã–nce kendi Ã¼zerinde ara
+                _guardSystem = GetComponent<GuardSystem>();
+
+                // Bulamazsa Child objelerde ara (SENÄ°N SORUNUNU Ã‡Ã–ZEN SATIR BU)
+                if (_guardSystem == null)
+                {
+                    _guardSystem = GetComponentInChildren<GuardSystem>();
+                }
+            }
+
             base.Awake();
         }
-    }
 
-    // Soldier: Hýzlý ateþ eden, yüksek menzilli birim (Rifle)
-    public class Soldier : CombatCharacter
-    {
-        protected override void Awake()
+        public override void OnPossess()
         {
-            characterName = "Elite Soldier";
-            base.Awake();
+            base.OnPossess();
+            if (_guardSystem != null)
+            {
+                _guardSystem.StopMove();
+                _guardSystem.enabled = false; // AI'yÄ± sustur
+            }
+            else
+            {
+                Debug.LogError($"{name}: GuardSystem bulunamadÄ±! AI durdurulamÄ±yor.");
+            }
+        }
+
+        public override void OnDepossess()
+        {
+            base.OnDepossess();
+            if (_guardSystem != null)
+                _guardSystem.enabled = true;
         }
     }
 }
