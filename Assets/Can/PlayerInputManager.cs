@@ -72,11 +72,28 @@ namespace Can
                 }
             }
 
-            // Sol Tık ile Ateş etme (CombatCharacter ise)
+            //// HandleActionInput içindeki sol tık kısmı:
+            //if (Input.GetButton("Fire1"))
+            //{
+            //    // Eğer possessed olan şey bir CombatCharacter ise Action() çağır (Ateş et)
+            //    if (PossessionManager.Instance.CurrentPossessed is Eren.CombatCharacter combatChar)
+            //    {
+            //        combatChar.Action();
+            //    }
+            //}
+            // SOL TIK: Sadece ATEŞ ETME (Combat) içindir
+            
             if (Input.GetButton("Fire1"))
             {
-                // Burası daha sonra Mustafa'nın CombatCharacter'i ile bağlanacak.
-                // Şimdilik sadece BaseCharacter üzerinden gidiyoruz, ileride cast edip Attack çağıracağız.
+                // Şu anki karakter bir Savaşçı mı? (CombatCharacter mi?)
+                Eren.CombatCharacter combatChar = PossessionManager.Instance.CurrentPossessed as Eren.CombatCharacter;
+
+                if (combatChar != null)
+                {
+                    // CombatCharacter içindeki Action() metodu "weaponSystem.Shoot" yapıyor
+                    // O yüzden burada Action'ı çağırıyoruz.
+                    combatChar.Action();
+                }
             }
         }
 
