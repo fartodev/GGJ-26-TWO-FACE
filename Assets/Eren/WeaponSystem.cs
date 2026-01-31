@@ -13,21 +13,48 @@ namespace Eren
 
         public void Shoot(Transform firePoint)
         {
+            // Null checks
+            if (currentWeapon == null)
+            {
+                Debug.LogError("currentWeapon is null!");
+                return;
+            }
+
+            if (currentWeapon.bulletPrefab == null)
+            {
+                Debug.LogError($"{currentWeapon.weaponName} bulletPrefab is null!");
+                return;
+            }
+
+            if (firePoint == null)
+            {
+                Debug.LogError("firePoint is null!");
+                return;
+            }
+
             if (Time.time >= nextFireTime && currentAmmo > 0)
             {
-                nextFireTime = Time.time + currentWeapon.fireRate;
-                currentAmmo--;
+                // Mermi oluï¿½turma - First create the bullet
+                GameObject bullet = Instantiate(currentWeapon.bulletPrefab, firePoint.position, firePoint.rotation);
 
-                // Mermi oluþturma
-                Instantiate(currentWeapon.bulletPrefab, firePoint.position, firePoint.rotation);
-                Debug.Log($"{currentWeapon.weaponName} ateþlendi! Kalan mermi: {currentAmmo}");
+                // Only update ammo and fire time if bullet was successfully created
+                if (bullet != null)
+                {
+                    currentAmmo--;
+                    nextFireTime = Time.time + currentWeapon.fireRate;
+                    Debug.Log($"{currentWeapon.weaponName} ateï¿½lendi! Kalan mermi: {currentAmmo}");
+                }
+                else
+                {
+                    Debug.LogError("Failed to instantiate bullet!");
+                }
             }
         }
 
         public void Reload()
         {
             currentAmmo = currentWeapon.maxAmmo;
-            Debug.Log("Þarjör yenilendi.");
+            Debug.Log("ï¿½arjï¿½r yenilendi.");
         }
     }
 }
