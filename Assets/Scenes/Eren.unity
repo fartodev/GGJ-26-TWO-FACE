@@ -362,6 +362,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Floor
       objectReference: {fileID: 0}
+    - target: {fileID: 7475964219331957039, guid: a35913665962640429fc5fce3369cf1b, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 8564557623581770096, guid: a35913665962640429fc5fce3369cf1b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -476,6 +480,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3903068037625000145, guid: a14c5db4844f6644582e5df8aca40f98, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 3903068037625000145, guid: a14c5db4844f6644582e5df8aca40f98, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8539036475135291279, guid: a14c5db4844f6644582e5df8aca40f98, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

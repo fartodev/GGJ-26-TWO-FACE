@@ -62,6 +62,12 @@ namespace Mustafa
             }
         }
 
+        public void Kill()
+        {
+            currentHealth = 0;
+            Die(); // Ýçerideki standart ölüm mantýðýný çalýþtýrýr
+        }
+
         // Test için dýþarýdan iyileþtirme fonksiyonu
         public void Heal(float amount)
         {
