@@ -1,0 +1,1 @@
+## Deposses sonrası npc delete.
