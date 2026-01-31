@@ -14,31 +14,30 @@ namespace Game.Characters
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
-            _rb.gravityScale = 0f; // Top-down olduðu için yerçekimini kapat
+            _rb.gravityScale = 0f; // Top-down olduï¿½u iï¿½in yerï¿½ekimini kapat
         }
 
         public void SetPlayerControl(bool isPlayer)
         {
             _isPlayerControlled = isPlayer;
-            // 2D'de NavMeshAgent (varsayýlan) yerine basit hareket kullanacaðýz 
-            // veya 2D NavMesh eklentisi kullanmalýsýn.
+            // 2D'de NavMeshAgent (varsayï¿½lan) yerine basit hareket kullanacaï¿½ï¿½z 
+            // veya 2D NavMesh eklentisi kullanmalï¿½sï¿½n.
         }
 
         public void MoveByInput(Vector2 direction) // Vector3 -> Vector2
         {
-            if (!_isPlayerControlled) return;
-            _rb.linearVelocity = direction.normalized * _moveSpeed; // Unity 2023+ (Eski sürümse .velocity)
+            _rb.linearVelocity = direction.normalized * _moveSpeed; // Unity 2023+ (Eski sï¿½rï¿½mse .velocity)
         }
 
-       // public void RotateTowards(Vector2 targetPoint)
-       // {
-            // 2D Bakýþ Mantýðý: Karakterin baktýðý yönü (Right veya Up) hedefe çevir
-            //Vector2 lookDir = targetPoint - (Vector2)transform.position;
-            //float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
+        // public void RotateTowards(Vector2 targetPoint)
+        // {
+        // 2D Bakï¿½ï¿½ Mantï¿½ï¿½ï¿½: Karakterin baktï¿½ï¿½ï¿½ yï¿½nï¿½ (Right veya Up) hedefe ï¿½evir
+        //Vector2 lookDir = targetPoint - (Vector2)transform.position;
+        //float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
 
-            // Karakterin sprite'ý saða bakýyorsa 0, yukarý bakýyorsa -90 ofset gerekebilir
-            //Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
-            //transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
-       // }
+        // Karakterin sprite'ï¿½ saï¿½a bakï¿½yorsa 0, yukarï¿½ bakï¿½yorsa -90 ofset gerekebilir
+        //Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
+        //transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
+        // }
     }
 }
