@@ -47,7 +47,7 @@ namespace Game.Characters
 
         public virtual void LookAt(Vector2 targetPoint)
         {
-            // _motor.RotateTowards(targetPoint);
+           // _motor.RotateTowards(targetPoint);
         }
 
         // Abstract: Her karakter kendi aksiyonunu tanımlamak zorunda

@@ -1,1 +1,0 @@
-## Deposses sonrası npc'yi öldür.
