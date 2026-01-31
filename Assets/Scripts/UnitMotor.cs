@@ -6,7 +6,7 @@ namespace Game.Characters
     public class UnitMotor : MonoBehaviour
     {
         [SerializeField] private float _moveSpeed = 5f;
-        [SerializeField] private float _rotationSpeed = 720f; // 2D'de derece cinsinden
+        //[SerializeField] private float _rotationSpeed = 720f; // 2D'de derece cinsinden
 
         private Rigidbody2D _rb;
         private bool _isPlayerControlled = false;
@@ -30,15 +30,15 @@ namespace Game.Characters
             _rb.linearVelocity = direction.normalized * _moveSpeed; // Unity 2023+ (Eski sürümse .velocity)
         }
 
-        public void RotateTowards(Vector2 targetPoint)
-        {
+       // public void RotateTowards(Vector2 targetPoint)
+       // {
             // 2D Bakýþ Mantýðý: Karakterin baktýðý yönü (Right veya Up) hedefe çevir
-            Vector2 lookDir = targetPoint - (Vector2)transform.position;
-            float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
+            //Vector2 lookDir = targetPoint - (Vector2)transform.position;
+            //float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
 
             // Karakterin sprite'ý saða bakýyorsa 0, yukarý bakýyorsa -90 ofset gerekebilir
-            Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
-        }
+            //Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
+            //transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
+       // }
     }
 }

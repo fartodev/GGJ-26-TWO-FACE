@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Eren
 {
-    public abstract class CombatCharacter : BaseCharacter
+    public class CombatCharacter : BaseCharacter
     {
         [Header("Combat Settings")]
         public WeaponSystem weaponSystem;

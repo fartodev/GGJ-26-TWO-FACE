@@ -39,7 +39,7 @@ namespace Can
                 float v = Input.GetAxisRaw("Vertical");
 
                 // Girdiyi vektöre çevir
-                Vector3 moveDir = new Vector3(h, 0, v).normalized;
+                Vector2 moveDir = new Vector2(h, v).normalized;
 
                 // Karaktere (UnitMotor'a) hareket emrini ilet
                 character.Move(moveDir);
@@ -52,7 +52,7 @@ namespace Can
             if (PossessionManager.Instance.CurrentPossessed == null) return;
 
             // Mouse'un dünyadaki 2D koordinatını al
-            Vector3 mousePos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mousePos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
             Vector2 lookPoint = new Vector2(mousePos.x, mousePos.y);
 
             PossessionManager.Instance.CurrentPossessed.LookAt(lookPoint);
@@ -72,26 +72,13 @@ namespace Can
                 }
             }
 
-            //// HandleActionInput içindeki sol tık kısmı:
-            //if (Input.GetButton("Fire1"))
-            //{
-            //    // Eğer possessed olan şey bir CombatCharacter ise Action() çağır (Ateş et)
-            //    if (PossessionManager.Instance.CurrentPossessed is Eren.CombatCharacter combatChar)
-            //    {
-            //        combatChar.Action();
-            //    }
-            //}
-            // SOL TIK: Sadece ATEŞ ETME (Combat) içindir
-            
+            // Sol Tık ile Ateş etme (CombatCharacter ise)
+            // HandleActionInput içindeki sol tık kısmı:
             if (Input.GetButton("Fire1"))
             {
-                // Şu anki karakter bir Savaşçı mı? (CombatCharacter mi?)
-                Eren.CombatCharacter combatChar = PossessionManager.Instance.CurrentPossessed as Eren.CombatCharacter;
-
-                if (combatChar != null)
+                // Eğer possessed olan şey bir CombatCharacter ise Action() çağır (Ateş et)
+                if (PossessionManager.Instance.CurrentPossessed is Eren.CombatCharacter combatChar)
                 {
-                    // CombatCharacter içindeki Action() metodu "weaponSystem.Shoot" yapıyor
-                    // O yüzden burada Action'ı çağırıyoruz.
                     combatChar.Action();
                 }
             }
