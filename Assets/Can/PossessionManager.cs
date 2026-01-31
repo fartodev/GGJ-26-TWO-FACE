@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Game.Core;
 using Mustafa; // SoulCharacter'i tanımak için
@@ -7,6 +8,10 @@ namespace Can
     public class PossessionManager : MonoBehaviour
     {
         public static PossessionManager Instance { get; private set; }
+
+        // EVENTS - Observer Pattern Implementation
+        public event Action<IPossessable> OnPossessed;
+        public event Action OnDepossessed;
 
         [Header("Soul Reference")]
         [SerializeField] private SoulCharacter playerSoul; // Sahnedeki Ruh objesini buraya sürükle
@@ -41,7 +46,7 @@ namespace Can
             }
 
             // 2. Eğer hedef Ruh değilse (yani bir düşmana giriyorsak), Ruhu gizle
-            if (target != playerSoul)
+            if ((object)target != playerSoul)
             {
                 playerSoul.gameObject.SetActive(false);
             }
@@ -52,6 +57,9 @@ namespace Can
 
             // 4. Hedefe ele geçirildiğini bildir
             CurrentPossessed.OnPossess();
+
+            // Event fırlat - Dinleyiciler tepki verecek
+            OnPossessed?.Invoke(CurrentPossessed);
 
             Debug.Log($"<color=green>POSSESSED:</color> {currentPossessedObject.name}");
         }
@@ -66,7 +74,7 @@ namespace Can
 
             // 2. Eğer şu anki karakter zaten Ruh ise işlem yapma (Ruh kendini öldürmesin)
             // 'playerSoul' değişkeninin sınıfın başında tanımlı olduğunu varsayıyorum
-            if (oldHost == playerSoul) return;
+            if ((object)oldHost == playerSoul) return;
 
             // 3. Bedenden çıkış işlemlerini yap (Resetleme vs.)
             if (oldHost != null)
@@ -86,6 +94,9 @@ namespace Can
             CurrentPossessed = playerSoul;
             currentPossessedObject = playerSoul.gameObject;
             playerSoul.OnPossess();
+
+            // Event fırlat - Dinleyiciler tepki verecek
+            OnDepossessed?.Invoke();
 
             Debug.Log("Ruh serbest kaldı, eski beden yok ediliyor...");
 
