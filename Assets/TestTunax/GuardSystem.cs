@@ -2,12 +2,15 @@ using System;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Can;
 
 namespace TestTunax
 {
     public class GuardSystem : MonoBehaviour
     {
         public Transform[] movePoints;
+
+        [Tooltip("Fallback character reference - will use PossessionManager if available")]
         public Transform character;
 
         public float minDistance = 3;
@@ -17,6 +20,27 @@ namespace TestTunax
         private bool moveToCharacter = false;
 
         private Tween _moveTween;
+
+        /// <summary>
+        /// Gets the current target - either from PossessionManager (possessed body) or fallback character
+        /// </summary>
+        private Transform CurrentTarget
+        {
+            get
+            {
+                // If PossessionManager exists, track the currently possessed object
+                if (PossessionManager.Instance != null && PossessionManager.Instance.CurrentPossessed != null)
+                {
+                    var possessed = PossessionManager.Instance.CurrentPossessed as MonoBehaviour;
+                    if (possessed != null && possessed.gameObject.activeInHierarchy)
+                    {
+                        return possessed.transform;
+                    }
+                }
+                // Fallback to direct reference
+                return character;
+            }
+        }
 
         private void Awake()
         {
@@ -50,12 +74,15 @@ namespace TestTunax
 
         private void CheckTargetCharacter()
         {
-            float distance = Vector3.Distance(character.position, transform.position);
-            if (distance<minDistance)
+            Transform target = CurrentTarget;
+            if (target == null) return;
+
+            float distance = Vector3.Distance(target.position, transform.position);
+            if (distance < minDistance)
             {
                 if (moveToCharacter)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position, character.position, characterToPlayerSpeed*Time.deltaTime);
+                    transform.position = Vector3.MoveTowards(transform.position, target.position, characterToPlayerSpeed * Time.deltaTime);
                 }
                 else
                 {
