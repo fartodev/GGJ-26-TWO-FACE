@@ -1,5 +1,6 @@
-## oksijen (bugfix)
-## şüphe sistemi. (npclere cone vision ve şüphe colliderı)
 ## Ana Konak.
 ## Mermi vectorü.
-## Spritelar alınıp animasyon bağlancak.
+## Spritelar alınıp animasyon bağlancak. (DOTWEEN)
+## Soldier ve Scientist yapılacak.
+## Ana karakter child object olarak bağlancak.
+## Yeni npc ai'yını interactable sisteme bağla.
