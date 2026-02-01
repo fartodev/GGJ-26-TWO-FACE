@@ -14,6 +14,9 @@ namespace Game.Characters
         protected Animator _animator;
         private Rigidbody2D _rb;
 
+        // AI sistemleri için manuel yürüme durumu
+        private bool _isAIWalking = false;
+
         protected virtual void Awake()
         {
             if (_motor == null) _motor = GetComponent<UnitMotor>(); //
@@ -32,17 +35,29 @@ namespace Game.Characters
 
             // 1. Hız ve Hareket Kontrolü
             float vx = _rb.linearVelocity.x; //
-            bool isMoving = _rb.linearVelocity.magnitude > 0.1f; //
+            bool isMovingByVelocity = _rb.linearVelocity.magnitude > 0.1f; //
+
+            // AI veya fizik tabanlı hareket kontrolü
+            bool isMoving = isMovingByVelocity || _isAIWalking;
 
             // 2. Kesin Flip Mantığı (Scale kullanarak)
-            // Sadece hareket varsa yön değiştir, dururken son baktığı yönde kalsın
-            if (vx > 0.1f) transform.localScale = new Vector3(1 , 1 , 1);
-            else if (vx < -0.1f) transform.localScale = new Vector3(-1 , 1 , 1);
+            // Sadece fizik tabanlı hareket varsa yön değiştir (AI flip'i LookAt ile yapılıyor)
+            if (vx > 0.1f) transform.localScale = new Vector3(1, 1, 1);
+            else if (vx < -0.1f) transform.localScale = new Vector3(-1, 1, 1);
 
             // 3. Animator Parametrelerini Gönder
             // Animator'da 'isWalking' (Bool) ve 'isPossessed' (Bool) tanımlı olmalı
             _animator.SetBool("isWalking", isMoving);
             _animator.SetBool("isPossessed", _isPossessed);
+        }
+
+        /// <summary>
+        /// AI sistemleri tarafından yürüme animasyonunu manuel olarak kontrol etmek için kullanılır.
+        /// DOTween gibi velocity kullanmayan hareketlerde çağrılmalı.
+        /// </summary>
+        public void SetAIWalking(bool isWalking)
+        {
+            _isAIWalking = isWalking;
         }
 
         public virtual void OnPossess()

@@ -2,8 +2,8 @@ using System;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using Can; // PossessionManager için
-using Eren; // CombatCharacter için
+using Can; // PossessionManager iï¿½in
+using Eren; // CombatCharacter iï¿½in
 
 namespace TestTunax
 {
@@ -15,15 +15,15 @@ namespace TestTunax
         public float patrolSpeed = 2f;
 
         [Header("Combat AI Settings")]
-        public float chaseSpeed = 3.5f; // Guard'dan daha hýzlý
+        public float chaseSpeed = 3.5f; // Guard'dan daha hï¿½zlï¿½
         public float detectionRange = 8f; // Oyuncuyu fark etme mesafesi
-        public float attackRange = 5f;    // Ateþ etme mesafesi
+        public float attackRange = 5f;    // Ateï¿½ etme mesafesi
 
         private int currentIndex = 0;
         private Tween _moveTween;
         private CombatCharacter _combatChar;
 
-        // State kontrolü
+        // State kontrolï¿½
         private bool _isChasing = false;
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace TestTunax
                 if (PossessionManager.Instance != null && PossessionManager.Instance.CurrentPossessed != null)
                 {
                     var possessed = PossessionManager.Instance.CurrentPossessed as MonoBehaviour;
-                    // Kendimizi hedef almayalým ve aktif bir hedef varsa dönelim
+                    // Kendimizi hedef almayalï¿½m ve aktif bir hedef varsa dï¿½nelim
                     if (possessed != null && possessed.gameObject != this.gameObject && possessed.gameObject.activeInHierarchy)
                     {
                         return possessed.transform;
@@ -58,8 +58,8 @@ namespace TestTunax
 
         private void Update()
         {
-            // Eðer karakter possess edildiyse bu script Soldier.cs tarafýndan kapatýlýr (enabled = false).
-            // O yüzden burada ekstra kontrole gerek yok.
+            // Eï¿½er karakter possess edildiyse bu script Soldier.cs tarafï¿½ndan kapatï¿½lï¿½r (enabled = false).
+            // O yï¿½zden burada ekstra kontrole gerek yok.
             CheckTargetAndAct();
         }
 
@@ -67,20 +67,20 @@ namespace TestTunax
         {
             Transform target = CurrentTarget;
 
-            // Hedef yoksa normal devriyeye dön
+            // Hedef yoksa normal devriyeye dï¿½n
             if (target == null)
             {
                 if (_isChasing)
                 {
                     _isChasing = false;
-                    MoveStart(); // Devriyeye geri dön
+                    MoveStart(); // Devriyeye geri dï¿½n
                 }
                 return;
             }
 
             float distance = Vector2.Distance(target.position, transform.position);
 
-            // -- MANTIK: GÖR -> KOVALA -> SALDIR --
+            // -- MANTIK: Gï¿½R -> KOVALA -> SALDIR --
 
             if (distance < detectionRange)
             {
@@ -88,31 +88,34 @@ namespace TestTunax
                 if (!_isChasing)
                 {
                     _isChasing = true;
-                    StopMove(); // Tween'i öldür
+                    StopMove(); // Tween'i ï¿½ldï¿½r
                 }
 
-                // Silahý hedefe çevir (CombatCharacter içindeki geliþmiþ LookAt çalýþýr)
+                // Silahï¿½ hedefe ï¿½evir (CombatCharacter iï¿½indeki geliï¿½miï¿½ LookAt ï¿½alï¿½ï¿½ï¿½r)
                 _combatChar.LookAt(target.position);
 
                 if (distance <= attackRange)
                 {
-                    // SALDIRI MODU: Dur ve Ateþ Et
-                    // Hareketi durdur (Pozisyonu sabitle veya hýzý sýfýrla)
-                    // DOTween kullanmadýðýmýz için transform'u ellemiyoruz, olduðu yerde durur.
+                    // SALDIRI MODU: Dur ve Ateï¿½ Et
+                    // Hareketi durdur (Pozisyonu sabitle veya hï¿½zï¿½ sï¿½fï¿½rla)
+                    // DOTween kullanmadï¿½ï¿½ï¿½mï¿½z iï¿½in transform'u ellemiyoruz, olduï¿½u yerde durur.
+                    _combatChar.SetAIWalking(false); // Duruyoruz
 
-                    // Silahý ateþle
+                    // SilahÄ± ateÅŸle
                     _combatChar.Action(target.position);
                 }
                 else
                 {
-                    // KOVALAMA MODU: Hedefe doðru koþ
-                    // GuardSystem'deki gibi MoveTowards kullanýyoruz ama biraz daha hýzlý
-                    transform.position = Vector2.MoveTowards(transform.position, target.position, chaseSpeed * Time.deltaTime);
+                    // KOVALAMA MODU: Hedefe doÄŸru koÅŸ
+                    // GuardSystem'deki gibi MoveTowards kullanÄ±yoruz ama biraz daha hÄ±zlÄ±
+                    _combatChar.SetAIWalking(true); // KoÅŸuyoruz
+                    Vector2 newPos = Vector2.MoveTowards(transform.position, target.position, chaseSpeed * Time.deltaTime);
+                    transform.position = newPos;
                 }
             }
             else
             {
-                // Hedef menzilden çýktý, devriyeye geri dön
+                // Hedef menzilden ï¿½ï¿½ktï¿½, devriyeye geri dï¿½n
                 if (_isChasing)
                 {
                     _isChasing = false;
@@ -121,7 +124,7 @@ namespace TestTunax
             }
         }
 
-        #region Patrol Logic (GuardSystem ile Ayný)
+        #region Patrol Logic (GuardSystem ile Aynï¿½)
 
         [Button]
         public void MoveStart()
@@ -136,9 +139,8 @@ namespace TestTunax
 
             Transform targetPoint = movePoints[currentIndex % movePoints.Length];
 
-            // Devriye sýrasýnda da baktýðý yöne dönsün
-            _combatChar.LookAt(targetPoint.position);
-
+            // Devriye sï¿½rasï¿½nda da baktï¿½ï¿½ï¿½ yï¿½ne dï¿½nsï¿½n
+            _combatChar.LookAt(targetPoint.position); _combatChar.SetAIWalking(true); // Devriye baÅŸladÄ±, yÃ¼rÃ¼yoruz
             _moveTween = transform.DOMove(targetPoint.position, patrolSpeed)
                 .SetSpeedBased(true)
                 .SetEase(Ease.Linear)
@@ -153,6 +155,7 @@ namespace TestTunax
         public void StopMove()
         {
             _moveTween?.Kill();
+            _combatChar.SetAIWalking(false); // Devriye durdu
         }
 
         #endregion

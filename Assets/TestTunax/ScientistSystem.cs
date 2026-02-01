@@ -13,6 +13,7 @@ namespace Mustafa
     }
 
     [RequireComponent(typeof(Rigidbody2D))] // Rigidbody şart
+    [RequireComponent(typeof(Scientist))]
     public class ScientistSystem : MonoBehaviour
     {
         [Header("Movement Settings")]
@@ -22,6 +23,7 @@ namespace Mustafa
         private int _currentPointIndex = 0;
         private Tween _moveTween;
         private Rigidbody2D _rb;
+        private Scientist _scientist;
 
         [Header("Detection Ranges (Trigger)")]
         [Tooltip("Ruhu fark etme mesafesi")]
@@ -46,6 +48,7 @@ namespace Mustafa
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
+            _scientist = GetComponent<Scientist>();
         }
 
         private void Start()
@@ -125,6 +128,7 @@ namespace Mustafa
 
             _moveTween?.Kill(); // Tween'i kesinlikle öldür
             currentState = ScientistState.Fleeing;
+            _scientist.SetAIWalking(false); // Fizik tabanlı hareket, velocity animasyonu tetikleyecek
 
             Debug.Log($"<color=red>TEHLİKE!</color> Kaçış Başladı: {currentThreat.name}");
         }
@@ -150,6 +154,7 @@ namespace Mustafa
 
             // Fiziği durdur
             _rb.linearVelocity = Vector2.zero;
+            _scientist.SetAIWalking(false); // Duruyoruz
 
             Debug.Log("<color=yellow>GÜVENLİ.</color> Etrafı dinliyor...");
         }
@@ -177,6 +182,8 @@ namespace Mustafa
             Vector3 dir = target.position - transform.position;
             if (dir.x > 0) transform.localScale = Vector3.one;
             else transform.localScale = new Vector3(-1, 1, 1);
+
+            _scientist.SetAIWalking(true); // Devriye başladı, yürüyoruz
 
             _moveTween = transform.DOMove(target.position, patrolSpeed)
                 .SetSpeedBased(true)

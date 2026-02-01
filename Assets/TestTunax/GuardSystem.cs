@@ -2,8 +2,8 @@ using System;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using Can; // PossessionManager için
-using Eren; // CombatCharacter için
+using Can; // PossessionManager iï¿½in
+using Eren; // CombatCharacter iï¿½in
 
 namespace TestTunax
 {
@@ -12,22 +12,22 @@ namespace TestTunax
     {
         [Header("Patrol Settings")]
         public Transform[] movePoints;
-        public float patrolSpeed = 2f; // Devriye hýzý
+        public float patrolSpeed = 2f; // Devriye hï¿½zï¿½
 
         [Header("Combat AI Settings")]
-        public float chaseSpeed = 2.5f;   // Soldier'dan (3.5) daha yavaþ
-        public float detectionRange = 6f; // Soldier'dan (8) daha kör
-        public float attackRange = 4f;    // Soldier'dan (5) daha kýsa menzilli
+        public float chaseSpeed = 2.5f;   // Soldier'dan (3.5) daha yavaï¿½
+        public float detectionRange = 6f; // Soldier'dan (8) daha kï¿½r
+        public float attackRange = 4f;    // Soldier'dan (5) daha kï¿½sa menzilli
 
         private int currentIndex = 0;
         private Tween _moveTween;
         private CombatCharacter _combatChar;
 
-        // State kontrolü
+        // State kontrolï¿½
         private bool _isChasing = false;
 
         /// <summary>
-        /// Hedef bulucu (PossessionManager öncelikli, yoksa null)
+        /// Hedef bulucu (PossessionManager ï¿½ncelikli, yoksa null)
         /// </summary>
         private Transform CurrentTarget
         {
@@ -36,7 +36,7 @@ namespace TestTunax
                 if (PossessionManager.Instance != null && PossessionManager.Instance.CurrentPossessed != null)
                 {
                     var possessed = PossessionManager.Instance.CurrentPossessed as MonoBehaviour;
-                    // Kendimizi hedef almayalým ve aktif bir hedef varsa dönelim
+                    // Kendimizi hedef almayalï¿½m ve aktif bir hedef varsa dï¿½nelim
                     if (possessed != null && possessed.gameObject != this.gameObject && possessed.gameObject.activeInHierarchy)
                     {
                         return possessed.transform;
@@ -58,7 +58,7 @@ namespace TestTunax
 
         private void Update()
         {
-            // Eðer karakter possess edildiyse Guard.cs tarafýndan enabled=false yapýlýr.
+            // Eï¿½er karakter possess edildiyse Guard.cs tarafï¿½ndan enabled=false yapï¿½lï¿½r.
             CheckTargetAndAct();
         }
 
@@ -66,7 +66,7 @@ namespace TestTunax
         {
             Transform target = CurrentTarget;
 
-            // Hedef yoksa veya kaybolduysa devriyeye dön
+            // Hedef yoksa veya kaybolduysa devriyeye dï¿½n
             if (target == null)
             {
                 if (_isChasing)
@@ -79,37 +79,40 @@ namespace TestTunax
 
             float distance = Vector2.Distance(target.position, transform.position);
 
-            // -- MANTIK: GÖR -> KOVALA -> SALDIR --
+            // -- MANTIK: Gï¿½R -> KOVALA -> SALDIR --
 
             if (distance < detectionRange)
             {
-                // Hedef menzilde, devriyeyi durdur ve kovalama moduna geç
+                // Hedef menzilde, devriyeyi durdur ve kovalama moduna geï¿½
                 if (!_isChasing)
                 {
                     _isChasing = true;
-                    StopMove(); // Tween'i öldür
+                    StopMove(); // Tween'i ï¿½ldï¿½r
                 }
 
-                // 1. Silahý hedefe çevir
+                // 1. Silahï¿½ hedefe ï¿½evir
                 _combatChar.LookAt(target.position);
 
                 if (distance <= attackRange)
                 {
-                    // 2. SALDIRI MODU: Dur ve Ateþ Et
-                    // DOTween kullanmadýðýmýz için transform'u ellemiyoruz, olduðu yerde durur.
+                    // 2. SALDIRI MODU: Dur ve Ateï¿½ Et
+                    // DOTween kullanmadï¿½ï¿½ï¿½mï¿½z iï¿½in transform'u ellemiyoruz, olduï¿½u yerde durur.
+                    _combatChar.SetAIWalking(false); // Duruyoruz
 
-                    // Hedefin pozisyonunu gönderiyoruz ki mermi oraya gitsin
+                    // Hedefin pozisyonunu gÃ¶nderiyoruz ki mermi oraya gitsin
                     _combatChar.Action(target.position);
                 }
                 else
                 {
-                    // 3. KOVALAMA MODU: Hedefe doðru yürü
-                    transform.position = Vector2.MoveTowards(transform.position, target.position, chaseSpeed * Time.deltaTime);
+                    // 3. KOVALAMA MODU: Hedefe doÄŸru yÃ¼rÃ¼
+                    _combatChar.SetAIWalking(true); // YÃ¼rÃ¼yoruz
+                    Vector2 newPos = Vector2.MoveTowards(transform.position, target.position, chaseSpeed * Time.deltaTime);
+                    transform.position = newPos;
                 }
             }
             else
             {
-                // Hedef menzilden çýktý, takibi býrak ve devriyeye dön
+                // Hedef menzilden ï¿½ï¿½ktï¿½, takibi bï¿½rak ve devriyeye dï¿½n
                 if (_isChasing)
                 {
                     _isChasing = false;
@@ -133,9 +136,8 @@ namespace TestTunax
 
             Transform targetPoint = movePoints[currentIndex % movePoints.Length];
 
-            // Devriye sýrasýnda da gidilen noktaya baksýn
-            _combatChar.LookAt(targetPoint.position);
-
+            // Devriye sï¿½rasï¿½nda da gidilen noktaya baksï¿½n
+            _combatChar.LookAt(targetPoint.position); _combatChar.SetAIWalking(true); // Devriye baÅŸladÄ±, yÃ¼rÃ¼yoruz
             _moveTween = transform.DOMove(targetPoint.position, patrolSpeed)
                 .SetSpeedBased(true)
                 .SetEase(Ease.Linear)
@@ -150,18 +152,19 @@ namespace TestTunax
         public void StopMove()
         {
             _moveTween?.Kill();
+            _combatChar.SetAIWalking(false); // Devriye durdu
         }
 
         #endregion
 
         private void OnDrawGizmosSelected()
         {
-            // Görsel Debug
+            // Gï¿½rsel Debug
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, detectionRange); // Fark etme alaný
+            Gizmos.DrawWireSphere(transform.position, detectionRange); // Fark etme alanï¿½
 
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, attackRange);    // Ateþ etme alaný
+            Gizmos.DrawWireSphere(transform.position, attackRange);    // Ateï¿½ etme alanï¿½
         }
     }
 }

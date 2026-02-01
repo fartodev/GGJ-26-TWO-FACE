@@ -15,31 +15,43 @@ namespace Mustafa
             base.Awake();
         }
 
+        // Flip karakteri hedef noktaya gÃ¶re (player kontrolÃ¼ndeyken)
+        public override void LookAt(Vector2 targetPoint)
+        {
+            Vector2 direction = targetPoint - (Vector2)transform.position;
+
+            // Sadece Ã¶nemli bir fark varsa flip yap
+            if (direction.x > 0.1f)
+                transform.localScale = new Vector3(1, 1, 1);
+            else if (direction.x < -0.1f)
+                transform.localScale = new Vector3(-1, 1, 1);
+        }
+
         public override void Action()
         {
-            // Tek bir obje yerine, alandaki TÜM objeleri alýyoruz
+            // Tek bir obje yerine, alandaki Tï¿½M objeleri alï¿½yoruz
             Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactRange, interactableLayer);
 
             bool interactFound = false;
 
             foreach (Collider2D hit in hits)
             {
-                // Eðer çarptýðýmýz obje kendimizsek (Scientist), bunu atla ve döngüye devam et
+                // Eï¿½er ï¿½arptï¿½ï¿½ï¿½mï¿½z obje kendimizsek (Scientist), bunu atla ve dï¿½ngï¿½ye devam et
                 if (hit.gameObject == this.gameObject) continue;
 
                 IInteractable target = hit.GetComponent<IInteractable>();
                 if (target != null)
                 {
-                    Debug.Log($"Etkileþim Baþarýlý: {hit.name}");
-                    target.Interact(this); // Kendimizi (this) gönderiyoruz
+                    Debug.Log($"Etkileï¿½im Baï¿½arï¿½lï¿½: {hit.name}");
+                    target.Interact(this); // Kendimizi (this) gï¿½nderiyoruz
                     interactFound = true;
-                    break; // Ýlk geçerli etkileþimde döngüyü kýr (ayný anda 5 kapý açýlmasýn)
+                    break; // ï¿½lk geï¿½erli etkileï¿½imde dï¿½ngï¿½yï¿½ kï¿½r (aynï¿½ anda 5 kapï¿½ aï¿½ï¿½lmasï¿½n)
                 }
             }
 
             if (!interactFound)
             {
-                Debug.Log("Menzilde etkileþime girilecek geçerli bir nesne yok.");
+                Debug.Log("Menzilde etkileï¿½ime girilecek geï¿½erli bir nesne yok.");
             }
         }
 

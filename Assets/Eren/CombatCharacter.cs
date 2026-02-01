@@ -26,5 +26,17 @@ namespace Eren
                 // AI'nın belirlediği hedefi WeaponSystem'e iletiyoruz
                 weaponSystem.Shoot(firePoint, targetPosition);
         }
+
+        // Flip karakteri hedef noktaya göre
+        public override void LookAt(Vector2 targetPoint)
+        {
+            Vector2 direction = targetPoint - (Vector2)transform.position;
+
+            // Sadece önemli bir fark varsa flip yap
+            if (direction.x > 0.1f)
+                transform.localScale = new Vector3(1, 1, 1);
+            else if (direction.x < -0.1f)
+                transform.localScale = new Vector3(-1, 1, 1);
+        }
     }
 }
