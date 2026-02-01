@@ -9,7 +9,7 @@ namespace Eren
         public WeaponSystem weaponSystem;
         public Transform firePoint;
 
-        // IPossessable'dan gelen Action metodunu silah ateþlemek için override ediyoruz
+        // IPossessable'dan gelen Action metodunu silah ateï¿½lemek iï¿½in override ediyoruz
         public override void Action()
         {
             if (weaponSystem != null)
