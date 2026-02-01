@@ -39,6 +39,15 @@ namespace Can
         {
             if (target == null) return;
 
+            // NERF: Eğer zaten bir bedendeyken (Ruh değilken) başka birine geçmeye çalışırsak,
+            // direkt possess etmek yerine depossess ol (Ruh formuna dön)
+            if (CurrentPossessed != null && (object)CurrentPossessed != playerSoul && (object)target != playerSoul)
+            {
+                Debug.Log("<color=yellow>Zaten bir bedende bulunuyorsun! Önce çıkmalısın.</color>");
+                Depossess();
+                return;
+            }
+
             // 1. ESKİ BEDEN İŞLEMLERİ
             if (CurrentPossessed != null)
             {
