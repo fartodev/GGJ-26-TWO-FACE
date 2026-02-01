@@ -18,16 +18,17 @@ namespace Eren
                 nextFireTime = Time.time + currentWeapon.fireRate;
                 currentAmmo--;
 
-                // Mermi oluþturma
-                Instantiate(currentWeapon.bulletPrefab, firePoint.position, firePoint.rotation);
-                Debug.Log($"{currentWeapon.weaponName} ateþlendi! Kalan mermi: {currentAmmo}");
+                // Mermi oluï¿½turma
+                var bullet = Instantiate(currentWeapon.bulletPrefab, firePoint.position, firePoint.rotation);
+                bullet.GetComponent<Bullet>().Shot();
+                Debug.Log($"{currentWeapon.weaponName} ateï¿½lendi! Kalan mermi: {currentAmmo}");
             }
         }
 
         public void Reload()
         {
             currentAmmo = currentWeapon.maxAmmo;
-            Debug.Log("Þarjör yenilendi.");
+            Debug.Log("ï¿½arjï¿½r yenilendi.");
         }
     }
 }

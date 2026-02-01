@@ -1,4 +1,5 @@
 using UnityEngine;
+using Can;
 
 namespace Eren
 {
@@ -7,24 +8,36 @@ namespace Eren
         public float speed = 20f;
         public float damage = 10f;
         public float lifeTime = 3f;
-
+        public Vector2 dir;
+        private bool shoting;
         void Start()
         {
-            // Belirlenen süre sonunda mermiyi yok et
+            // Belirlenen sï¿½re sonunda mermiyi yok et
             Destroy(gameObject, lifeTime);
+        }
+
+        public void Shot()
+        {
+            Vector2 mouseWorld = Can.PlayerInputManager.LastMouseWorldPosition;
+            Vector2 bulletPos = transform.position;
+            dir = (mouseWorld - bulletPos).normalized;
+            shoting = true;
         }
 
         void Update()
         {
-            // HATA DÜZELTME: Vector3.forward yerine Vector2.right kullanýyoruz.
-            // 2D'de 'Space.Self' (yerel eksen) üzerinden merminin 'Sað' yönüne ilerlemesini saðlarýz.
-            // Eðer mermi sprite'ýn yukarý bakýyorsa Vector2.up kullanabilirsin.
-            transform.Translate(Vector2.right * speed * Time.deltaTime, Space.Self);
+            if (!shoting)
+            {
+                return;
+            }
+            // Mouse pozisyonuna doÄŸru ilerle
+
+            transform.position += (Vector3)dir * speed * Time.deltaTime;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            // IDamageable arayüzüne sahip bir objeye çarptýk mý?
+            // IDamageable arayï¿½zï¿½ne sahip bir objeye ï¿½arptï¿½k mï¿½?
             IDamageable target = other.GetComponent<IDamageable>();
 
             if (target != null)
@@ -33,7 +46,7 @@ namespace Eren
                 Debug.Log($"{other.name} hedefine {damage} hasar verildi!");
             }
 
-            // Çarpýnca mermiyi yok et (Duvara veya düþmana)
+            // ï¿½arpï¿½nca mermiyi yok et (Duvara veya dï¿½ï¿½mana)
             Destroy(gameObject);
         }
     }

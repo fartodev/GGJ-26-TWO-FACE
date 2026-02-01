@@ -47,7 +47,9 @@ namespace Can
         }
 
         // HandleLookInput içindeki değişikliği yap:
-        private void HandleLookInput()
+        public static Vector2 LastMouseWorldPosition { get; private set; }
+
+        public void HandleLookInput()
         {
             if (PossessionManager.Instance.CurrentPossessed == null) return;
 
@@ -55,6 +57,7 @@ namespace Can
             Vector2 mousePos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
             Vector2 lookPoint = new Vector2(mousePos.x, mousePos.y);
 
+            LastMouseWorldPosition = lookPoint;
             PossessionManager.Instance.CurrentPossessed.LookAt(lookPoint);
         }
 
