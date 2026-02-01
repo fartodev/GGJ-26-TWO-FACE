@@ -87,7 +87,9 @@ namespace Game.Core
         private void HandleDepossession()
         {
             _isSoulMode = true;
-            Debug.Log("<color=cyan>[OxygenSystem]</color> Ruh formuna dönüldü. Hızlı oksijen kaybı aktif.");
+            AddOxygen(oxygenOnDepossess);
+
+            Debug.Log($"<color=cyan>[OxygenSystem]</color> Ruh formuna dönüldü. +{oxygenOnDepossess} oksijen eklendi.");
         }
 
         private void DrainOxygen(float amount)
