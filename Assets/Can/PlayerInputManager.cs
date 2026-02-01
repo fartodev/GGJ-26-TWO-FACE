@@ -26,13 +26,17 @@ namespace Can
 
         private void HandleMovementInput()
         {
-            // Aktif bir karakter yoksa işlem yapma
+            //var boolVal = PossessionManager.Instance.CurrentPossessed == null;
+            //TestDebug.Instance.AddLog("PossessionManager.Instance.CurrentPossessed == null : " + boolVal );
+            //// Aktif bir karakter yoksa işlem yapma
             if (PossessionManager.Instance.CurrentPossessed == null) return;
 
             // Şu anki possessed obje bir BaseCharacter mi?
             // (Hareket mantığı BaseCharacter ve UnitMotor üzerinde olduğu için cast ediyoruz)
             BaseCharacter character = PossessionManager.Instance.CurrentPossessed as BaseCharacter;
 
+            var haveCharacter = character == null;
+            //TestDebug.Instance.AddLog("PossessionManager.Instance.CurrentPossessed == null : " + haveCharacter);
             if (character != null)
             {
                 float h = Input.GetAxisRaw("Horizontal");
