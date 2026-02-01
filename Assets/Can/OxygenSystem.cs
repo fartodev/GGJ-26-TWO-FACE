@@ -13,10 +13,10 @@ namespace Game.Core
 
         [Header("Drain Rates")]
         [Tooltip("Ruh formunda oksijen kaybı hızı (birim/saniye)")]
-        [SerializeField] private float soulFormDrainRate = 10f;
+        [SerializeField] private float soulFormDrainRate = 200f;
 
         [Tooltip("Ele geçirilmiş bedende oksijen kaybı hızı (birim/saniye)")]
-        [SerializeField] private float possessedDrainRate = 2f;
+        [SerializeField] private float possessedDrainRate = 4f;
 
         [Header("Bonuses")]
         [Tooltip("Bir bedene girince eklenen bonus oksijen")]
@@ -170,8 +170,18 @@ namespace Game.Core
         {
             Debug.LogError("<color=red>[OxygenSystem]</color> OKSİJEN BİTTİ! Oyun bitti.");
 
-            // TODO: Oyun sonu ekranı veya sahne yenileme
-            Time.timeScale = 0f; // Geçici olarak oyunu durdur
+            // GameOver UI'ı göster
+            if (GameOverUI.Instance != null)
+            {
+                GameOverUI.Instance.ShowGameOver("OXYGEN DEPLETED\nYOU DIED");
+            }
+            else
+            {
+                Debug.LogError("[OxygenSystem] GameOverUI instance bulunamadı! Sahneye GameOverUI ekleyin.");
+            }
+
+            // Oyunu durdur
+            Time.timeScale = 0f;
         }
 
         // Public getter'lar - Gerekirse dışarıdan erişim için

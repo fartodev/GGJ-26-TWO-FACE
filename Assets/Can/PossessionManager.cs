@@ -39,26 +39,59 @@ namespace Can
         {
             if (target == null) return;
 
-            // 1. Eğer şu an bir bedendeysek, ondan çıkış işlemlerini yap
+            // 1. ESKİ BEDEN İŞLEMLERİ
             if (CurrentPossessed != null)
             {
+                // Önce standart çıkış işlemini yap (AI açma vs.)
                 CurrentPossessed.OnDepossess();
+
+                // --- YENİ EKLENEN KISIM: ÖLDÜRME MANTIĞI ---
+
+                // Eğer şu an içinde olduğumuz şey RUH DEĞİLSE (yani bir bedenden başka bedene atlıyorsak)
+                if ((object)CurrentPossessed != playerSoul)
+                {
+                    // Eski bedeni bir MonoBehaviour olarak al
+                    MonoBehaviour oldHost = CurrentPossessed as MonoBehaviour;
+
+                    if (oldHost != null)
+                    {
+                        // HealthSystem'i bul ve öldür
+                        if (oldHost.TryGetComponent(out Mustafa.HealthSystem health))
+                        {
+                            health.Kill(); // Bu fonksiyon HealthSystem içinde Die() çağırır
+                            Debug.Log($"<color=red>BEDEN TERK EDİLDİ VE ÖLDÜRÜLDÜ:</color> {oldHost.name}");
+                        }
+                        else
+                        {
+                            // Can sistemi yoksa direkt yok et
+                            Destroy(oldHost.gameObject);
+                        }
+                    }
+                }
+                // Eğer Ruh'tan çıkıyorsak (Soul -> Guard), Ruh'u öldürme, sadece gizle
+                else
+                {
+                    playerSoul.gameObject.SetActive(false);
+                }
             }
 
-            // 2. Eğer hedef Ruh değilse (yani bir düşmana giriyorsak), Ruhu gizle
+            // 2. YENİ BEDEN İŞLEMLERİ (Burada değişiklik yok)
+
+            // Eğer hedef Ruh değilse (yani bir düşmana giriyorsak), Ruhu gizle
+            // (Yukarıda zaten yaptık ama güvenlik için kalsın)
             if ((object)target != playerSoul)
             {
                 playerSoul.gameObject.SetActive(false);
             }
 
-            // 3. Yeni hedefi ayarla
+            // Yeni hedefi ayarla
             CurrentPossessed = target;
             currentPossessedObject = (target as MonoBehaviour)?.gameObject;
 
-            // 4. Hedefe ele geçirildiğini bildir
+            // Hedefe ele geçirildiğini bildir
             CurrentPossessed.OnPossess();
 
-            // Event fırlat - Dinleyiciler tepki verecek
+            // Event fırlat
             OnPossessed?.Invoke(CurrentPossessed);
 
             Debug.Log($"<color=green>POSSESSED:</color> {currentPossessedObject.name}");
