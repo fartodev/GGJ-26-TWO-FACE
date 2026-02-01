@@ -119,6 +119,62 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &251304693 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 897636867284379486, guid: d62314d1be7c31e41adb41a1c847d83c, type: 3}
+  m_PrefabInstance: {fileID: 6359993052421912853}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &251304695 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3039639332288993187, guid: d62314d1be7c31e41adb41a1c847d83c, type: 3}
+  m_PrefabInstance: {fileID: 6359993052421912853}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 251304693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da942e8b3d2d0d849b5150e9c3463cf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TestTunax.SoldierSystem
+--- !u!114 &251304698 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7549841607473556162, guid: d62314d1be7c31e41adb41a1c847d83c, type: 3}
+  m_PrefabInstance: {fileID: 6359993052421912853}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 251304693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25110118eb34c644281b1e4a05ddfd2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Eren.WeaponSystem
+--- !u!114 &251304700 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6177976283593554448, guid: d62314d1be7c31e41adb41a1c847d83c, type: 3}
+  m_PrefabInstance: {fileID: 6359993052421912853}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 251304693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a37a5fa611b8d546bccecd6ee91140e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Characters.UnitMotor
+--- !u!114 &251304703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 251304693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4da2f6c2dab47304798ea5dc616cfe47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Eren.Soldier
+  _motor: {fileID: 251304700}
+  characterName: 
+  _isPossessed: 0
+  weaponSystem: {fileID: 251304698}
+  firePoint: {fileID: 1335965783}
+  _soldierSystem: {fileID: 251304695}
 --- !u!1 &1009162527
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,6 +333,11 @@ MonoBehaviour:
   maxX: 20
   minY: -20
   maxY: 20
+--- !u!4 &1335965783 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 959373983606617736, guid: d62314d1be7c31e41adb41a1c847d83c, type: 3}
+  m_PrefabInstance: {fileID: 6359993052421912853}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1730213107
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,6 +389,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: GuardSystem (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5355193640555711311, guid: 85d70cce4736c26429919c2009ee0997, type: 3}
+      propertyPath: attackRange
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5355193640555711311, guid: 85d70cce4736c26429919c2009ee0997, type: 3}
+      propertyPath: detectionRange
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6638301699780120038, guid: 85d70cce4736c26429919c2009ee0997, type: 3}
+      propertyPath: _guardSystem
+      value: 
+      objectReference: {fileID: 2066597084}
     - target: {fileID: 7465698094794098914, guid: 85d70cce4736c26429919c2009ee0997, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8.2
@@ -389,6 +462,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51dd50ed57bbb5748b1b3c959d85fe20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Mustafa.SoulCharacter
+--- !u!114 &2066597084 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5355193640555711311, guid: 85d70cce4736c26429919c2009ee0997, type: 3}
+  m_PrefabInstance: {fileID: 1860280235}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3791557929b5704abf98ea8d5533ebc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &100040966435674168
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -654,7 +738,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 897636867284379486, guid: d62314d1be7c31e41adb41a1c847d83c, type: 3}
+      insertIndex: 7
+      addedObject: {fileID: 251304703}
   m_SourcePrefab: {fileID: 100100000, guid: d62314d1be7c31e41adb41a1c847d83c, type: 3}
 --- !u!1001 &8178067808345119425
 PrefabInstance:

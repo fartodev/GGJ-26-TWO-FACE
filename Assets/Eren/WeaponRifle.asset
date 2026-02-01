@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Eren.Weapon
   weaponName: 
   damage: 10
-  fireRate: 1
-  maxAmmo: 30
+  fireRate: 0.25
+  maxAmmo: 50
   range: 50
   bulletPrefab: {fileID: 5246273128731948747, guid: 90ad44a00452f2a498a8bc2802b349d4, type: 3}
