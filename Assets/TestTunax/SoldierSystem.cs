@@ -101,7 +101,7 @@ namespace TestTunax
                     // DOTween kullanmadýðýmýz için transform'u ellemiyoruz, olduðu yerde durur.
 
                     // Silahý ateþle
-                    _combatChar.Action();
+                    _combatChar.Action(target.position);
                 }
                 else
                 {

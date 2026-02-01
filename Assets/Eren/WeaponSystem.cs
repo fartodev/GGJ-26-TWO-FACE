@@ -11,24 +11,31 @@ namespace Eren
 
         void Start() => currentAmmo = currentWeapon.maxAmmo;
 
-        public void Shoot(Transform firePoint)
+        public void Shoot(Transform firePoint, Vector2? targetPosition = null)
         {
             if (Time.time >= nextFireTime && currentAmmo > 0)
             {
                 nextFireTime = Time.time + currentWeapon.fireRate;
                 currentAmmo--;
 
-                // Mermi olu�turma
-                var bullet = Instantiate(currentWeapon.bulletPrefab, firePoint.position, firePoint.rotation);
-                bullet.GetComponent<Bullet>().Shot();
-                Debug.Log($"{currentWeapon.weaponName} ate�lendi! Kalan mermi: {currentAmmo}");
+                // Mermiyi oluştur
+                var bulletObj = Instantiate(currentWeapon.bulletPrefab, firePoint.position, firePoint.rotation);
+                var bulletScript = bulletObj.GetComponent<Bullet>();
+
+                // 1. YENİ: Sahibini (Bu silahı tutan karakteri) mermiye ata
+                // "gameObject" bu scriptin bağlı olduğu karakterdir (Guard/Soldier)
+                bulletScript.SetOwner(gameObject);
+
+                // 2. Ateşle
+                bulletScript.Shot(targetPosition);
+
+                Debug.Log($"{currentWeapon.weaponName} ateşlendi! Kalan: {currentAmmo}");
             }
         }
 
         public void Reload()
         {
             currentAmmo = currentWeapon.maxAmmo;
-            Debug.Log("�arj�r yenilendi.");
         }
     }
 }

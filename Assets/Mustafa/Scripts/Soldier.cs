@@ -6,52 +6,46 @@ namespace Eren
     public class Soldier : CombatCharacter
     {
         [Header("AI References")]
-        [Tooltip("SoldierSystem scripti Child objede veya bu objede ise buraya sürükleyin.")]
+        // SoldierSystem'i buraya sürükle veya otomatik bulmasýna izin ver
         [SerializeField] private SoldierSystem _soldierSystem;
 
         protected override void Awake()
         {
-            // Soldier'a özel isim ve ayarlar
             characterName = "Elite Soldier";
 
-            // AI Scriptini otomatik bul (Guard.cs'deki fix ile ayný mantýk)
+            // AI Scriptini otomatik bul
             if (_soldierSystem == null)
             {
                 _soldierSystem = GetComponent<SoldierSystem>();
+                // Eðer kendinde yoksa child objelerde ara
                 if (_soldierSystem == null)
-                {
                     _soldierSystem = GetComponentInChildren<SoldierSystem>();
-                }
             }
 
             base.Awake();
         }
 
-        // Oyuncu bu bedene girdiðinde AI kapanmalý
+        // 1. Ele geçirildiðinde: AI'yý KAPAT
         public override void OnPossess()
         {
             base.OnPossess();
 
             if (_soldierSystem != null)
             {
-                _soldierSystem.StopMove(); // Devriyeyi durdur
-                _soldierSystem.enabled = false; // AI beynini kapat
-            }
-            else
-            {
-                Debug.LogError($"{name}: SoldierSystem bulunamadý! AI durdurulamýyor.");
+                _soldierSystem.StopMove(); // Devriyeyi durdur (Tween kill)
+                _soldierSystem.enabled = false; // Update fonksiyonunu durdur
             }
         }
 
-        // Oyuncu bedenden çýktýðýnda AI tekrar devreye girmeli
+        // 2. Býrakýldýðýnda: AI'yý AÇ
         public override void OnDepossess()
         {
             base.OnDepossess();
 
             if (_soldierSystem != null)
             {
-                _soldierSystem.enabled = true; // AI beynini aç
-                _soldierSystem.MoveStart(); // Devriyeye kaldýðý yerden veya baþtan baþla
+                _soldierSystem.enabled = true; // Update fonksiyonunu baþlat
+                _soldierSystem.MoveStart(); // Devriyeyi tekrar baþlat
             }
         }
     }
