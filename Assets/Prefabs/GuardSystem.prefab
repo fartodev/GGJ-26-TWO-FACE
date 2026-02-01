@@ -263,6 +263,7 @@ GameObject:
   - component: {fileID: 5291606167462842419}
   - component: {fileID: 575088475883557298}
   - component: {fileID: 5355193640555711311}
+  - component: {fileID: 4025559816418845384}
   m_Layer: 6
   m_Name: Guard
   m_TagString: Untagged
@@ -484,10 +485,32 @@ MonoBehaviour:
   movePoints:
   - {fileID: 4368875111842125369}
   - {fileID: 3078413944621611770}
-  character: {fileID: 0}
-  minDistance: 3
-  characterSpeed: 3
-  characterToPlayerSpeed: 3
+  patrolSpeed: 2
+  chaseSpeed: 2.5
+  detectionRange: 6
+  attackRange: 4
+--- !u!95 &4025559816418845384
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8265160499087727464}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c6ee0e3919d47d449a0ca509dd844f3a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &9167802593538921211
 GameObject:
   m_ObjectHideFlags: 0
